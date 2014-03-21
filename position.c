@@ -71,10 +71,48 @@ int movesList(Position *pos, Move *marray)
 
 int pawnMovesList(int r, int c, Position *pos, Move *marray)
 {
-	// TODO:
 	// Funkcija generira sve poteze za pjeaka na (r,c) koordinatama
 	// i sprema ih u niz marray.
-	return 0;
+	int count=0;
+	if(pos->board[r][c] == (PAWN|BLACK) && (r<7))
+	{
+		if((pos->board[r+1][c-1] == EMPTY) && (c>0) )
+		{
+			(marray+count)->from_c = c;
+			(marray+count)->from_r = r;
+			(marray+count)->to_r = r+1;
+			(marray+count)->to_c= c-1;
+			count++;
+		}
+		if((pos->board[r+1][c+1] == EMPTY) && (c<7) )
+		{
+			(marray+count)->from_c = c;
+			(marray+count)->from_r = r;
+			(marray+count)->to_r = r+1;
+			(marray+count)->to_c= c+1;
+			count++;
+		}
+	}
+	else if(pos->board[r][c] == (PAWN|WHITE) && (r>0))
+	{
+		if((pos->board[r-1][c-1] == EMPTY) && (c>0) )
+		{
+			(marray+count)->from_c = c;
+			(marray+count)->from_r = r;
+			(marray+count)->to_r = r-1;
+			(marray+count)->to_c= c-1;
+			count++;
+		}
+		if((pos->board[r-1][c+1] == EMPTY) && (c<7) )
+		{
+			(marray+count)->from_c = c;
+			(marray+count)->from_r = r;
+			(marray+count)->to_r = r-1;
+			(marray+count)->to_c= c+1;
+			count++;
+		}
+	}
+	return count;
 }
 
 int isLegalMove(Position *pos, Move *mov)
