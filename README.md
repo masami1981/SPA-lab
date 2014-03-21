@@ -1,3 +1,3 @@
-SPA_lab
+SPA-lab
 =======
 izgradnja algoritma za igru dama.
