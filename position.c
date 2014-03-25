@@ -62,15 +62,34 @@ void printPos(Position *pos)
 
 int movesList(Position *pos, Move *marray)
 {
-	// TODO:
 	// Funkcija generira sve legalne poteze u poziciji i sprema ih u niz marray
 	// (marray je alociran). Funkcija se oslanja na funkciju pawnMovesList.
 	// Funkcija vraća broj legalnih poteza.
-	int r,c,n=0;
-	for(r=0;r<8;r++)
-	    for(c=0;c<8;c++)
-            n+=pawnMovesList(r, c, pos, marray);
-	return n;
+    int i, r, c, n =0;
+    Move pawn_marray[2];
+    if(pos->moves == BLACK)
+    {
+        for(r=0; r<8; r++){
+            for(c=0; c<8; c++){
+                i=pawnMovesList(r,c, pos, pawn_marray);
+                while(i-- && (pos->board[r][c] == (PAWN|BLACK))){
+                    marray[n++]=pawn_marray[i];
+                }
+            }
+        }
+    }
+    else
+    {
+        for(r=0; r<8; r++){
+            for(c=0; c<8; c++){
+                i=pawnMovesList(r,c, pos, pawn_marray);
+                while(i-- && (pos->board[r][c] == (PAWN|WHITE))){
+                    marray[n++]=pawn_marray[i];
+                }
+            }
+        }
+    }
+    return n;
 
 }
 
@@ -78,46 +97,70 @@ int pawnMovesList(int r, int c, Position *pos, Move *marray)
 {
 	// Funkcija generira sve poteze za pješaka na (r,c) koordinatama
 	// i sprema ih u niz marray.
-	int count=0;
-	if(pos->board[r][c] == (PAWN|BLACK) && (r<7))
-	{
-		if((pos->board[r+1][c-1] == EMPTY) && (c>0) )
-		{
-			(marray+count)->from_c = c;
-			(marray+count)->from_r = r;
-			(marray+count)->to_r = r+1;
-			(marray+count)->to_c= c-1;
-			count++;
-		}
-		if((pos->board[r+1][c+1] == EMPTY) && (c<7) )
-		{
-			(marray+count)->from_c = c;
-			(marray+count)->from_r = r;
-			(marray+count)->to_r = r+1;
-			(marray+count)->to_c= c+1;
-			count++;
-		}
-	}
-	else if(pos->board[r][c] == (PAWN|WHITE) && (r>0))
-	{
-		if((pos->board[r-1][c-1] == EMPTY) && (c>0) )
-		{
-			(marray+count)->from_c = c;
-			(marray+count)->from_r = r;
-			(marray+count)->to_r = r-1;
-			(marray+count)->to_c= c-1;
-			count++;
-		}
-		if((pos->board[r-1][c+1] == EMPTY) && (c<7) )
-		{
-			(marray+count)->from_c = c;
-			(marray+count)->from_r = r;
-			(marray+count)->to_r = r-1;
-			(marray+count)->to_c= c+1;
-			count++;
-		}
-	}
-	return count;
+    int count=0;
+    if(pos->board[r][c]==(PAWN|BLACK) && r<7){
+        if(pos->board[r+1][c+1]==EMPTY && c<7){
+            (marray+count)->from_c=c;
+            (marray+count)->from_r=r;
+            (marray+count)->to_c=c+1;
+            (marray+count)->to_r=r+1;
+            count++;
+        }
+        else if(pos->board[r+2][c+2]==EMPTY && pos->board[r+1][c+1]==(PAWN|WHITE) && c<6 && r<6){
+            (marray+count)->from_c=c;
+            (marray+count)->from_r=r;
+            (marray+count)->to_c=c+2;
+            (marray+count)->to_r=r+2;
+            count++;
+        }
+        if(pos->board[r+1][c-1]==EMPTY && c>0){
+            (marray+count)->from_c=c;
+            (marray+count)->from_r=r;
+            (marray+count)->to_c=c-1;
+            (marray+count)->to_r=r+1;
+            count++;
+        }
+        else if(pos->board[r+2][c-2]==EMPTY && pos->board[r+1][c-1]==(PAWN|WHITE) && c>1 && r<6){
+            (marray+count)->from_c=c;
+            (marray+count)->from_r=r;
+            (marray+count)->to_c=c-2;
+            (marray+count)->to_r=r+2;
+            count++;
+        }
+
+    }
+    else if(pos->board[r][c]==(PAWN|WHITE) && r>0){
+        if(pos->board[r-1][c-1]==EMPTY && c>0){
+            (marray+count)->from_c=c;
+            (marray+count)->from_r=r;
+            (marray+count)->to_c=c-1;
+            (marray+count)->to_r=r-1;
+            count++;
+        }
+        else if(pos->board[r-2][c-2]==EMPTY && pos->board[r-1][c-1]==(PAWN|BLACK) && c>1 && r>1){
+            (marray+count)->from_c=c;
+            (marray+count)->from_r=r;
+            (marray+count)->to_c=c-2;
+            (marray+count)->to_r=r-2;
+            count++;
+        }
+        if(pos->board[r-1][c+1]==EMPTY && c<7){
+            (marray+count)->from_c=c;
+            (marray+count)->from_r=r;
+            (marray+count)->to_c=c+1;
+            (marray+count)->to_r=r-1;
+            count++;
+        }
+        else if(pos->board[r-2][c+2]==EMPTY && pos->board[r-1][c+1]==(PAWN|BLACK) && c<6 && r>1){
+            (marray+count)->from_c=c;
+            (marray+count)->from_r=r;
+            (marray+count)->to_c=c+2;
+            (marray+count)->to_r=r-2;
+            count++;
+        }
+
+    }
+    return count;
 }
 
 int isLegalMove(Position *pos, Move *mov)
@@ -220,12 +263,12 @@ void playMove(Position *pos, Move *mov)
 
 	pos->moves = (pos->moves == WHITE)? BLACK: WHITE;
 }
-
+/*
 void undoMove(Position *pos, uMove *mov)
 {
 
 }
-
+*/
 void randomMove(Position *pos, Move *mov)
 {
 	int n, i;
