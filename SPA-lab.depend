@@ -1,0 +1,25 @@
+# depslib dependency file v1.0
+1395430631 source:/home/seeker/codeblocks/SPA-lab/game.c
+	<stdio.h>
+	<malloc.h>
+	<string.h>
+	"game.h"
+
+1395430770 /home/seeker/codeblocks/SPA-lab/game.h
+	"position.h"
+
+1395430766 /home/seeker/codeblocks/SPA-lab/position.h
+
+1395430529 source:/home/seeker/codeblocks/SPA-lab/main.c
+	<stdio.h>
+	<stdlib.h>
+	<time.h>
+	"game.h"
+
+1395434979 source:/home/seeker/codeblocks/SPA-lab/position.c
+	<stdio.h>
+	<stdlib.h>
+	<malloc.h>
+	<string.h>
+	"position.h"
+
