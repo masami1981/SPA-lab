@@ -65,32 +65,16 @@ int movesList(Position *pos, Move *marray)
 	// Funkcija generira sve legalne poteze u poziciji i sprema ih u niz marray
 	// (marray je alociran). Funkcija se oslanja na funkciju pawnMovesList.
 	// Funkcija vraća broj legalnih poteza.
-    int i, r, c, n =0;
-    Move pawn_marray[2];
-    if(pos->moves == BLACK)
-    {
-        for(r=0; r<8; r++){
-            for(c=0; c<8; c++){
-                i=pawnMovesList(r,c, pos, pawn_marray);
-                while(i-- && (pos->board[r][c] == (PAWN|BLACK))){
-                    marray[n++]=pawn_marray[i];
-                }
-            }
-        }
-    }
-    else
-    {
-        for(r=0; r<8; r++){
-            for(c=0; c<8; c++){
-                i=pawnMovesList(r,c, pos, pawn_marray);
-                while(i-- && (pos->board[r][c] == (PAWN|WHITE))){
-                    marray[n++]=pawn_marray[i];
-                }
-            }
+    int r, c, n = 0;
+    for(r=0; r<8; r++){
+        for(c=0; c<8; c++){
+            if((pos->moves == BLACK) && (pos->board[r][c] == (PAWN|BLACK)))
+                n+=pawnMovesList(r,c, pos, marray+n);
+            else if((pos->moves == WHITE) && (pos->board[r][c] == (PAWN|WHITE)))
+                n+=pawnMovesList(r,c, pos, marray+n);
         }
     }
     return n;
-
 }
 
 int pawnMovesList(int r, int c, Position *pos, Move *marray)
