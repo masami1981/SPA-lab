@@ -11,3 +11,6 @@ HEADERS += \
     position.h \
     game.h
 
+OTHER_FILES += \
+    README.md
+
